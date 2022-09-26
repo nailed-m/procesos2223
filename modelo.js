@@ -4,7 +4,7 @@ function Juego(){
 	
 	this.agregarUsuario=function(nick){
 		if(!this.usuarios[nick]){
-			this.usuarios[nick])new Usuario(nick)
+			this.usuarios[nick]=new Usuario(nick)
 		}
 	}
 	
