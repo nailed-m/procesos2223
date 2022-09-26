@@ -18,10 +18,13 @@ describe("El juego...", function() {
         expect(usr2.nick).toEqual("luis");
     });
 
-    it("al crear partida", function(){
+    it("crear partida", function(){
         let codigo=usr1.crearPartida();
-        expect(miJuego.)
+        expect(miJuego.partidas[codigo]).toBeDefined();
+        let partida=miJuego.partidas[codigo];
+        expect(partida.owner).toEqual(usr1.nick);
+        expect(partida.jugadores[0]).toEqual(usr1.nick);
+        expect(partida.codigo).toEqual(codigo);
     })
-  
   });
   
