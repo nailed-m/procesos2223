@@ -8,7 +8,6 @@ describe("El juego...", function () {
         miJuego.agregarUsuario("luis");
         usr1 = miJuego.usuarios["pepe"];
         usr1 = miJuego.usuarios["luis"];
-
     });
 
     it("inicialmente", function () {
@@ -27,7 +26,7 @@ describe("El juego...", function () {
         expect(partida.codigo).toEqual(codigo);
     })
 
-    xit("el usuario se une a la partida", function ()){
+    xit("el usuario se une a la partida", function (){
         //todo
     }
 });
