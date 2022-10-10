@@ -33,19 +33,35 @@ function ControlWeb() {
         $("#mostrarHome").append(bienvenida);
     }
 
-    this.mostrarCrearPArtida=function(){
+    this.mostrarCrearPartida=function(){
         //Dibujar un botón que al hacer click llame a partida de rest
-        let botonCP = '<button id="mCP" class="btn btn-primary mb-2 mr-sm-2">Crear partida</button>';
-        
+        let botonCP = '<div id="mCP"><button class="btn btn-primary mb-2 mr-sm-2">Crear partida</button></div>';
+         
         $("#mostrarCrearPartida").append(botonCP);
 
         $("#mCP").on("click", function (e) {
-            rest.crearPartida(nick);
+            rest.crearPartida(rest.nick);
         })
     }
 
     this.mostrarListaDePartidas=function(){
         //hacer un list que muestre las partidas creadas
+        let cadena = '<ul class="nav nav-pills flex-column">'
+        cadena = cadena + '<li class="nav-item">'
+        cadena = cadena + '<a class="nav-link active" href="#">Active</a>'
+        cadena = cadena + '</li>'
+        cadena = cadena + '<li class="nav-item">'
+        cadena = cadena + '<a class="nav-link" href="#">Link</a>'
+        cadena = cadena + '</li>'
+        cadena = cadena + '<li class="nav-item">'
+        cadena = cadena + '<a class="nav-link" href="#">Link</a>'
+        cadena = cadena + '</li>'
+        cadena = cadena + '<li class="nav-item">'
+        cadena = cadena + '<a class="nav-link disabled" href="#">Disabled</a>'
+        cadena = cadena + '</li>'
+        cadena = cadena + '</ul>'
+
+        $("#mostrarListaDePartidas").append(cadena);
     }
 
 }
