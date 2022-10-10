@@ -35,6 +35,13 @@ function ControlWeb() {
 
     this.mostrarCrearPArtida=function(){
         //Dibujar un botón que al hacer click llame a partida de rest
+        let botonCP = '<button id="mCP" class="btn btn-primary mb-2 mr-sm-2">Crear partida</button>';
+        
+        $("#mostrarCrearPartida").append(botonCP);
+
+        $("#mCP").on("click", function (e) {
+            rest.crearPartida(nick);
+        })
     }
 
     this.mostrarListaDePartidas=function(){

@@ -10,6 +10,7 @@ function ClienteRest(){
                 //ws.nick=data.nick;
                 //$.cookie("nick",ws.nick);
                 iu.mostrarHome();
+                iu.mostrarCrearPartida(data);
             }
             else{
                 console-log("No se ha podido registrar el usuario")
@@ -57,7 +58,5 @@ function ClienteRest(){
             }
         })
     }
-
-    
 }
 
