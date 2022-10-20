@@ -1,4 +1,5 @@
 function ClienteRest(){
+    this.nick;
     this.agregarUsuario=function(nick){
         var cli=this;
         $.getJSON("/agregarUsuario/"+nick,function(data){
@@ -18,8 +19,6 @@ function ClienteRest(){
                 //iu.mostrarAgregarJugador();
             }
         });
-        //todavía no estoy seguro de que haya contestado el servidor
-        //lo que pongas aquí se ejecuta a la vez que la llamada
     }
 
     this.crearPartida=function(nick){
@@ -29,6 +28,7 @@ function ClienteRest(){
             console.log(data);
             if (data.codigo!=-1){
                 console.log("Usuario "+cli.nick+" crea la partida "+data.codigo)
+                iu.mostrarCodigo(data.codigo);
             }
             else {
                 console.log("No se ha podido crear la partida")
@@ -36,27 +36,35 @@ function ClienteRest(){
         })
     }
 
-    /*
-        app.get("/unirseAPartida/:nick/:codigo",function(request,response){
-          let nick = request.params.nick;
-          let codigo = request.params.codigo;
-          let res = juego.jugadorSeUneAPartida(nick,codigo);
-          response.send(res);
-        });
-
-    */
-    this.unirseAPartida=function(nick,codigo){
+    this.unirseAPartida=function(codigo){
         let cli=this;
-        $.getJSON("/unirseAPartida/"+nick+"/"+codigo,function(data){
+        $.getJSON("/unirseAPartida/"+cli.nick+"/"+codigo,function(data){
             //se ejecuta cuando conteste el servidor
             console.log(data);
             if (data.codigo!=-1){
                 console.log("Usuario "+cli.nick+" se une a la partida "+data.codigo)
+                iu.mostrarCodigo(data.codigo);
             }
             else {
                 console.log("No se ha podido unir a la partida")
             }
         })
+    }
+
+    this.obtenerListaPartidas=function(){
+        let cli=this;
+        $.getJSON("/obtenerPartidas",function(lista){
+            console.log(lista);
+            iu.mostrarListaDePartidas(lista);
+        });
+    }
+
+    this.obtenerListaPartidasDisponibles=function(){
+        let cli=this;
+        $.getJSON("/obtenerPartidasDisponibles",function(lista){
+            console.log(lista);
+            iu.mostrarListaDePartidasDisponibles(lista);
+        });
     }
 }
 

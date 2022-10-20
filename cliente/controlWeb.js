@@ -1,15 +1,16 @@
 function ControlWeb() {
     this.mostrarAgregarUsuario = function () {
-        var cadena = '<div class="row" id="mAU">';//'<form class="form-row needs-validation"  id="mAJ">';
-        cadena = cadena + '<div class="row"><h2>El juego indefinido</h2></div>';
-        cadena = cadena + '<div class="row">';
-        cadena = cadena + '<div class="col">'
-        cadena = cadena + '<input type="text" class="form-control mb-2 mr-sm-2" id="usr" placeholder="Introduce tu nick (max 6 letras)" required></div>';
-        cadena = cadena + '<div class="col">';
-        cadena = cadena + '<button id="btnAU" class="btn btn-primary mb-2 mr-sm-2">Iniciar sesión</button>';
+        let cadena = "<div class='row' id='mAU'>";//'<form class="form-row needs-validation"  id="mAJ">';
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<div class='row'><div class='col'><h2>El juego indefinido</h2></div></div>";
+        cadena = cadena + "<div class='row'>";
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<input type='text' class='form-control mb-2 mr-sm-2' id='usr' placeholder='Introduce tu nick (max 6 letras)' required></div>";
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<button id='btnAU' class='btn btn-primary mb-2 mr-sm-2'>Iniciar sesión</button>";
         //cadena=cadena+'<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Accede con Google</a>';
-        cadena = cadena + '</div>'; //' </form>';
-        cadena = cadena + '<div id="nota"></div></div></div>';
+        cadena = cadena + "</div>"; //' </form>';
+        cadena = cadena + "<div id='nota'></div></div></div>";
 
         $("#agregarUsuario").append(cadena);
         //$("#nota").append("<div id='aviso' style='text-align:right'>Inicia sesión con Google para jugar</div>");    
@@ -29,39 +30,69 @@ function ControlWeb() {
     }
 
     this.mostrarHome = function () {
-        let bienvenida = '<div id="mH"><p>Bienvenido '+rest.nick+'</p></div>';
+        $("#mH").remove();
+        let bienvenida = "<div class='row' id='mH'>";
+        bienvenida = bienvenida + "<div class='col'>";
+        bienvenida = bienvenida + "<p>Bienvenido "+rest.nick+"</p>"
+        bienvenida = bienvenida + "</div></div>";
         $("#mostrarHome").append(bienvenida);
+        rest.obtenerListaPartidasDisponibles();
     }
 
     this.mostrarCrearPartida=function(){
+        $("#mCP").remove();
         //Dibujar un botón que al hacer click llame a partida de rest
-        let botonCP = '<div id="mCP"><button class="btn btn-primary mb-2 mr-sm-2">Crear partida</button></div>';
+        let botonCP = "<div class='row' id='mCP'>"
+        botonCP = "<div class='col'>";
+        botonCP = botonCP + "<button id='buttonCP' class='btn btn-primary mb-2 mr-sm-2'>Crear partida</button>"
+        botonCP = botonCP + "</div></div>";
          
         $("#mostrarCrearPartida").append(botonCP);
 
-        $("#mCP").on("click", function (e) {
+        $("#buttonCP").on("click", function (e) {
+            $("#mCP").remove();
+            $("#mLP").remove();
             rest.crearPartida(rest.nick);
-        })
+        });
     }
 
-    this.mostrarListaDePartidas=function(){
-        //hacer un list que muestre las partidas creadas
-        let cadena = '<ul class="nav nav-pills flex-column">'
-        cadena = cadena + '<li class="nav-item">'
-        cadena = cadena + '<a class="nav-link active" href="#">Active</a>'
-        cadena = cadena + '</li>'
-        cadena = cadena + '<li class="nav-item">'
-        cadena = cadena + '<a class="nav-link" href="#">Link</a>'
-        cadena = cadena + '</li>'
-        cadena = cadena + '<li class="nav-item">'
-        cadena = cadena + '<a class="nav-link" href="#">Link</a>'
-        cadena = cadena + '</li>'
-        cadena = cadena + '<li class="nav-item">'
-        cadena = cadena + '<a class="nav-link disabled" href="#">Disabled</a>'
-        cadena = cadena + '</li>'
-        cadena = cadena + '</ul>'
+    this.mostrarCodigo=function(codigo){
+        let cadena = "Código de la partida: " + codigo;
+        $("#codigo").append(cadena);
+    }
 
+    this.mostrarListaDePartidas=function(lista){
+        $("#mLP").remove();
+        let cadena = "<div id='mLP'>";
+        cadena = cadena + "<ul class='list-group'>";
+        for(i=0;i<this.lista.length;i++){
+            cadena = cadena + "<li class'list-group-item'>"+lista[i].codigo+" propietario "+lista[i].owner+"</li>";
+        }
+        cadena = cadena + "</ul></div>";
         $("#mostrarListaDePartidas").append(cadena);
+    }
+
+    this.mostrarListaDePartidasDisponibles=function(lista){
+        $("#mLP").remove();
+        let cadena = "<div class='row' id='mLP>";
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<h2>Lista de partidas disponibles</h2>";
+        cadena = cadena + "<ul class='list-group'>";
+        for(i=0;i<lista.length;i++){
+            cadena = cadena + "<li class='list-group-item'><a href='#' value='"+lista[i].codigo+"'>Nick propietario: "+lista[i].owner+"</a></li>";
+        }
+        cadena = cadena + "</ul></div></div>";
+        $("#mostrarListaDePartidas").append(cadena);
+
+        $(".list-group a").click(function(){
+	        codigo=$(this).attr("value");
+   	        console.log(codigo);
+	        if (codigo){
+	            $("#mLP").remove();
+	            $("#mCP").remove();
+	            rest.unirseAPartida(codigo);
+	        }
+	    });		
     }
 
 }

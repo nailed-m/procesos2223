@@ -3,10 +3,10 @@ function Juego(){
 	this.usuarios={}; //array asociativo
 
 	this.agregarUsuario=function(nick){
-		let res={nick:-1};
+		let res={"nick":-1};
 		if (!this.usuarios[nick]){
 			this.usuarios[nick]=new Usuario(nick,this);
-			res={nick:nick};
+			res={"nick":nick};
 			console.log("Nuevo usuario: "+nick);
 		}
 		return res;
@@ -58,7 +58,13 @@ function Juego(){
 		return lista;
 	}
 	this.obtenerPartidasDisponibles=function(){
-
+		let lista=[];
+		for (let key in this.partidas){
+			if(this.partidas[key].fase=="inicial"){
+				lista.push({"codigo":key,"owner":this.partidas[key].owner.nick});
+			}
+		}
+		return lista;
 	}
 }
 
@@ -81,7 +87,7 @@ function Partida(codigo,usr){
 	this.maxJugadores=2;
 	this.agregarJugador=function(usr){
 		let res=this.codigo;
-		if (this.hayHueco){
+		if (this.hayHueco()){
 			this.jugadores.push(usr);
 			console.log("El usuario "+usr.nick+" se une a la partida "+this.codigo);
 			this.comprobarFase();
