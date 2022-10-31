@@ -1,4 +1,14 @@
 function ControlWeb() {
+    this.comprobarCookie=function(){
+        if ($.cookie("nick")){
+            rest.nick=$.cookie("nick");
+            this.mostrarHome();
+        }
+        else{
+            this.mostrarAgregarUsuario();
+        }
+    }
+
     this.mostrarAgregarUsuario = function () {
         let cadena = "<div class='row' id='mAU'>";//'<form class="form-row needs-validation"  id="mAJ">';
         cadena = cadena + "<div class='col'>";
@@ -10,7 +20,8 @@ function ControlWeb() {
         cadena = cadena + "<button id='btnAU' class='btn btn-primary mb-2 mr-sm-2'>Iniciar sesión</button>";
         //cadena=cadena+'<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Accede con Google</a>';
         cadena = cadena + "</div>"; //' </form>';
-        cadena = cadena + "<div id='nota'></div></div></div>";
+        cadena = cadena + "<div id='nota'></div>"
+        cadena = cadena + "</div></div></div>";
 
         $("#agregarUsuario").append(cadena);
         //$("#nota").append("<div id='aviso' style='text-align:right'>Inicia sesión con Google para jugar</div>");    
@@ -23,8 +34,9 @@ function ControlWeb() {
             else {
                 var nick = $('#usr').val();
                 $("#mAU").remove();
-                $("#aviso").remove();
+                //$("#aviso").remove();
                 rest.agregarUsuario(nick);
+                //mostrar gif
             }
         })
     }
@@ -33,26 +45,40 @@ function ControlWeb() {
         $("#mH").remove();
         let bienvenida = "<div class='row' id='mH'>";
         bienvenida = bienvenida + "<div class='col'>";
-        bienvenida = bienvenida + "<p>Bienvenido "+rest.nick+"</p>"
+        bienvenida = bienvenida + "<p>Bienvenido "+rest.nick+"</p>";
+        bienvenida = bienvenida + "<button id='btnSalir' class='btn btn-primary mb-2 mr-sm-2'>Salir</button>";
+        bienvenida = bienvenida + "<div id='codigo'></div>";
         bienvenida = bienvenida + "</div></div>";
-        $("#mostrarHome").append(bienvenida);
+        $("#agregarUsuario").append(bienvenida);
+        this.mostrarCrearPartida();
         rest.obtenerListaPartidasDisponibles();
+        
+        $("#btnSalir").on("click",function(e){
+            $("#mCP").remove();
+            $("#mLP").remove();
+            $("#mH").remove();
+            //rest.crearPartida();
+            rest.usuarioSale();
+            //$.removeCookie("nick");
+            //iu.comprobarCookie();
+        });
+        
     }
 
     this.mostrarCrearPartida=function(){
         $("#mCP").remove();
         //Dibujar un botón que al hacer click llame a partida de rest
-        let botonCP = "<div class='row' id='mCP'>"
-        botonCP = "<div class='col'>";
-        botonCP = botonCP + "<button id='buttonCP' class='btn btn-primary mb-2 mr-sm-2'>Crear partida</button>"
-        botonCP = botonCP + "</div></div>";
-         
-        $("#mostrarCrearPartida").append(botonCP);
+        let cadena = "<div class='row' id='mCP'>"
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<button id='buttonCP' class='btn btn-primary mb-2 mr-sm-2'>Crear partida</button>"
+        cadena = cadena + "</div></div>";
+        
+        $("#mostrarCrearPartida").append(cadena);
 
         $("#buttonCP").on("click", function (e) {
             $("#mCP").remove();
             $("#mLP").remove();
-            rest.crearPartida(rest.nick);
+            rest.crearPartida();
         });
     }
 
@@ -78,18 +104,17 @@ function ControlWeb() {
         cadena = cadena + "<div class='col'>";
         cadena = cadena + "<h2>Lista de partidas disponibles</h2>";
         cadena = cadena + "<button id='buttonALPD' class='btn btn-primary mb-2 mr-sm-2'>Actualizar</button>"
-        cadena = cadena + "<div class='row'>"
         cadena = cadena + "<ul class='list-group'>";
         for(i=0;i<lista.length;i++){
             cadena = cadena + "<li class='list-group-item'><a href='#' value='"+lista[i].codigo+"'>Nick propietario: "+lista[i].owner+"</a></li>";
         }
-        cadena = cadena + "</ul></div></div></div>";
+        cadena = cadena + "</ul>"
+        cadena = cadena + "</div>"
+        cadena = cadena + "</div>";
         $("#mostrarListaDePartidas").append(cadena);
 
         $("#buttonALPD").on("click", function (e) {
-            $("#mLP").remove();
             rest.obtenerListaPartidasDisponibles();
-            $("#mostrarListaDePartidas").append(cadena);
         });
 
         $(".list-group a").click(function(){
@@ -101,6 +126,13 @@ function ControlWeb() {
 	            rest.unirseAPartida(codigo);
 	        }
 	    });		
+    }
+
+    this.mostrarModal=function(msg){
+        $("#mM").remove();
+        var cadena = "<p id='mM'>"+msg+"</p>";
+        $("#contenidoModal").append(cadena);
+        $("#miModal").modal("show");
     }
 
 }

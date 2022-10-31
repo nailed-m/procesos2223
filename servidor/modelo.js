@@ -11,9 +11,19 @@ function Juego(){
 		}
 		return res;
 	}
+
 	this.eliminarUsuario=function(nick){
 		delete this.usuarios[nick];
+		console.log("usuario "+nick+" eliminado");
 	}
+	
+	this.usuarioSale=function(nick){
+		if (this.usuarios[nick]){
+			this.finalizarPartida(nick);
+			this.eliminarUsuario(nick);
+		}
+	}
+
 	this.jugadorCreaPartida=function(nick){
 		let usr = this.usuarios[nick];
 		let res={codigo:-1};
@@ -24,6 +34,7 @@ function Juego(){
 	    }
     	return res;
 	}
+
 	this.jugadorSeUneAPartida=function(nick,codigo){
 		let usr = this.usuarios[nick];
 		let res={"codigo":-1};
@@ -34,12 +45,14 @@ function Juego(){
 	    }
     	return res;
 	}
+
 	this.crearPartida=function(usr){
 		let codigo=Date.now();
 		console.log("Usuario "+usr.nick+ " crea partida "+codigo);
 		this.partidas[codigo]=new Partida(codigo,usr); 
 		return codigo;
 	}
+
 	this.unirseAPartida=function(codigo,usr){
 		let res=-1;
 		if (this.partidas[codigo]){
@@ -50,6 +63,7 @@ function Juego(){
 		}
 		return res;
 	}
+
 	this.obtenerPartidas=function(){
 		let lista=[];
 		for (let key in this.partidas){
@@ -57,6 +71,7 @@ function Juego(){
 		}
 		return lista;
 	}
+
 	this.obtenerPartidasDisponibles=function(){
 		let lista=[];
 		for (let key in this.partidas){
@@ -66,14 +81,25 @@ function Juego(){
 		}
 		return lista;
 	}
+
+	this.finalizarPartida=function(nick){
+		for (let key in this.partidas){
+			if(this.partidas[key].fase=="inicial" && this.partidas[key].estoy(nick)){
+				this.partidas[key].fase="final";
+				console.log("partida "+key+" eliminada");
+			} 
+		}
+	}
 }
 
 function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego=juego;
+
 	this.crearPartida=function(){
 		return this.juego.crearPartida(this)
 	}
+
 	this.unirseAPartida=function(codigo){
 		return this.juego.unirseAPartida(codigo,this);
 	}
@@ -85,6 +111,7 @@ function Partida(codigo,usr){
 	this.jugadores=[];
 	this.fase="inicial"; //new Inicial()
 	this.maxJugadores=2;
+
 	this.agregarJugador=function(usr){
 		let res=this.codigo;
 		if (this.hayHueco()){
@@ -98,6 +125,7 @@ function Partida(codigo,usr){
 		}
 		return res;
 	}
+
 	this.comprobarFase=function(){
 		if (!this.hayHueco()){
 			this.fase="jugando";
@@ -106,6 +134,16 @@ function Partida(codigo,usr){
 	this.hayHueco=function(){
 		return (this.jugadores.length<this.maxJugadores)
 	}
+
+	this.estoy=function(nick){
+		for(i=0; i<this.jugadores.length; i++){
+			if (this.jugadores[i].nick==nick){
+				return true
+			}
+		}
+		return false;
+	}
+
 	this.agregarJugador(this.owner);
 }
 
