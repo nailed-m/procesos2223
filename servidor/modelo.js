@@ -1,11 +1,11 @@
 function Juego(){
 	this.partidas={};
-	this.usuarios={}; //array asociativo
+	this.usuarios={}; //array asociativo (diccionario clave/valor)
 
 	this.agregarUsuario=function(nick){
 		let res={"nick":-1};
 		if (!this.usuarios[nick]){
-			this.usuarios[nick]=new Usuario(nick,this);
+			this.usuarios[nick]=new Usuario(nick,this); //creo un usuario y le paso el juego (this) para que sepa en qué instancia se encuentra
 			res={"nick":nick};
 			console.log("Nuevo usuario: "+nick);
 		}

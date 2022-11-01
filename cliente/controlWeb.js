@@ -1,4 +1,10 @@
+/**
+ * ControlWeb()
+ * Función encargada de gestionar las vistas de la aplicación
+ */
 function ControlWeb() {
+
+    //Revisa si en el navegador existe alguna cookie almacenada para dar o no la opción de ingresar con un nick
     this.comprobarCookie=function(){
         if ($.cookie("nick")){
             rest.nick=$.cookie("nick");
@@ -27,14 +33,14 @@ function ControlWeb() {
         //$("#nota").append("<div id='aviso' style='text-align:right'>Inicia sesión con Google para jugar</div>");    
 
         $("#btnAU").on("click", function (e) {
-            if ($('#usr').val() === '' || $('#usr').val().length > 6) {
+            if ($('#usr').val() === '' || $('#usr').val().length > 6) { //El nick no puede ser un campo vacío ni tener más de 6 caracteres
                 e.preventDefault();
                 $('#nota').append('Nick inválido');
             }
             else {
                 var nick = $('#usr').val();
                 $("#mAU").remove();
-                //$("#aviso").remove();
+                $("#aviso").remove();
                 rest.agregarUsuario(nick);
                 //mostrar gif
             }
@@ -42,14 +48,18 @@ function ControlWeb() {
     }
 
     this.mostrarHome = function () {
+
         $("#mH").remove();
-        let bienvenida = "<div class='row' id='mH'>";
-        bienvenida = bienvenida + "<div class='col'>";
-        bienvenida = bienvenida + "<p>Bienvenido "+rest.nick+"</p>";
-        bienvenida = bienvenida + "<button id='btnSalir' class='btn btn-primary mb-2 mr-sm-2'>Salir</button>";
-        bienvenida = bienvenida + "<div id='codigo'></div>";
-        bienvenida = bienvenida + "</div></div>";
-        $("#agregarUsuario").append(bienvenida);
+
+        let cadena = "<div class='row' id='mH'>";
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<h2>El juego indefinido</h2>"
+        cadena = cadena + "<div><p>Bienvenido "+rest.nick+"</p></div>";
+        cadena = cadena + "<div id='codigo'></div>";
+        cadena = cadena + "<button id='btnSalir' class='btn btn-primary mb-2 mr-sm-2'>Salir</button>";
+        cadena = cadena + "</div></div>";
+
+        $("#agregarUsuario").append(cadena);
         this.mostrarCrearPartida();
         rest.obtenerListaPartidasDisponibles();
         
@@ -57,16 +67,14 @@ function ControlWeb() {
             $("#mCP").remove();
             $("#mLP").remove();
             $("#mH").remove();
-            //rest.crearPartida();
             rest.usuarioSale();
-            //$.removeCookie("nick");
-            //iu.comprobarCookie();
         });
-        
     }
 
     this.mostrarCrearPartida=function(){
+
         $("#mCP").remove();
+
         //Dibujar un botón que al hacer click llame a partida de rest
         let cadena = "<div class='row' id='mCP'>"
         cadena = cadena + "<div class='col'>";
@@ -78,12 +86,15 @@ function ControlWeb() {
         $("#buttonCP").on("click", function (e) {
             $("#mCP").remove();
             $("#mLP").remove();
-            rest.crearPartida();
+            rest.crearPartida(); //Esto debemos sustituirlo por una función a través de WS
+            /*
+            gomez pone cws.crearPartida(), cuando descubra de dónde sale eso volveré aquí
+            */
         });
     }
 
     this.mostrarCodigo=function(codigo){
-        let cadena = "<div class='row'>Código de la partida: " + codigo + "</div>";
+        let cadena = "Código de la partida: " + codigo;
         $("#codigo").append(cadena);
     }
 
@@ -123,7 +134,11 @@ function ControlWeb() {
 	        if (codigo){
 	            $("#mLP").remove();
 	            $("#mCP").remove();
-	            rest.unirseAPartida(codigo);
+	            rest.unirseAPartida(codigo); //Esto debemos sustituirlo por una función a través de WS
+                /*
+                gomez pone cws.unirseAPartida(codigo), cuando descubra de dónde sale eso volveré aquí
+                */
+
 	        }
 	    });		
     }
