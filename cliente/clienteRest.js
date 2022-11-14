@@ -22,9 +22,7 @@ function ClienteRest(){
                 cli.nick=data.nick;
                 //ws.nick=data.nick;
                 $.cookie("nick",data.nick);
-                /*
-                gomez aquí tiene puesto cws.conectar(), cuando descubra qué es volveré aquí, pero pinta que lo que hace es iniciar la conexión por socket con el servidor
-                */
+                cws.conectar();
                 iu.mostrarHome();
                 //iu.mostrarCrearPartida();
             }

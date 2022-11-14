@@ -8,6 +8,7 @@ function ControlWeb() {
     this.comprobarCookie=function(){
         if ($.cookie("nick")){
             rest.nick=$.cookie("nick");
+            cws.conectar();
             this.mostrarHome();
         }
         else{
@@ -18,7 +19,7 @@ function ControlWeb() {
     this.mostrarAgregarUsuario = function () {
         let cadena = "<div class='row' id='mAU'>";//'<form class="form-row needs-validation"  id="mAJ">';
         cadena = cadena + "<div class='col'>";
-        cadena = cadena + "<div class='row'><div class='col'><h2>El juego indefinido</h2></div></div>";
+        cadena = cadena + "<div class='row'><div class='col'><h2>Hundir la flota</h2></div></div>";
         cadena = cadena + "<div class='row'>";
         cadena = cadena + "<div class='col'>";
         cadena = cadena + "<input type='text' class='form-control mb-2 mr-sm-2' id='usr' placeholder='Introduce tu nick (max 6 letras)' required></div>";
@@ -40,7 +41,7 @@ function ControlWeb() {
             else {
                 var nick = $('#usr').val();
                 $("#mAU").remove();
-                $("#aviso").remove();
+                //$("#aviso").remove();
                 rest.agregarUsuario(nick);
                 //mostrar gif
             }
@@ -53,7 +54,7 @@ function ControlWeb() {
 
         let cadena = "<div class='row' id='mH'>";
         cadena = cadena + "<div class='col'>";
-        cadena = cadena + "<h2>El juego indefinido</h2>"
+        cadena = cadena + "<h2>Hundir la flota</h2>"
         cadena = cadena + "<div><p>Bienvenido "+rest.nick+"</p></div>";
         cadena = cadena + "<div id='codigo'></div>";
         cadena = cadena + "<button id='btnSalir' class='btn btn-primary mb-2 mr-sm-2'>Salir</button>";
@@ -86,10 +87,8 @@ function ControlWeb() {
         $("#buttonCP").on("click", function (e) {
             $("#mCP").remove();
             $("#mLP").remove();
-            rest.crearPartida(); //Esto debemos sustituirlo por una función a través de WS
-            /*
-            gomez pone cws.crearPartida(), cuando descubra de dónde sale eso volveré aquí
-            */
+            //rest.crearPartida(); //Esto debemos sustituirlo por una función a través de WS (justo es la siguiente línea)
+            cws.crearPartida();
         });
     }
 
@@ -114,7 +113,7 @@ function ControlWeb() {
         let cadena = "<div class='row' id='mLP'>";
         cadena = cadena + "<div class='col'>";
         cadena = cadena + "<h2>Lista de partidas disponibles</h2>";
-        cadena = cadena + "<button id='buttonALPD' class='btn btn-primary mb-2 mr-sm-2'>Actualizar</button>"
+        //cadena = cadena + "<button id='buttonALPD' class='btn btn-primary mb-2 mr-sm-2'>Actualizar</button>"
         cadena = cadena + "<ul class='list-group'>";
         for(i=0;i<lista.length;i++){
             cadena = cadena + "<li class='list-group-item'><a href='#' value='"+lista[i].codigo+"'>Nick propietario: "+lista[i].owner+"</a></li>";
@@ -134,11 +133,8 @@ function ControlWeb() {
 	        if (codigo){
 	            $("#mLP").remove();
 	            $("#mCP").remove();
-	            rest.unirseAPartida(codigo); //Esto debemos sustituirlo por una función a través de WS
-                /*
-                gomez pone cws.unirseAPartida(codigo), cuando descubra de dónde sale eso volveré aquí
-                */
-
+	            //rest.unirseAPartida(codigo); //Esto debemos sustituirlo por una función a través de WS (justo la línea de abajo)
+                cws.unirseAPartida(codigo);
 	        }
 	    });		
     }

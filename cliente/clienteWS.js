@@ -1,10 +1,64 @@
 function ClienteWS(){
-    this.socket=io();
-    //enviar peticiones
-        //Implementar función para establecer la conecxión, gomez la ha llamado this.conectar = function() (esto aparecía en ./clienteRest.js)
-        //Implementar función para crear una partida, gomez la ha llamado this.crearPartida = function() (esto aparecía en ./controlWeb.js)
-        //Implementar función para unirse a una partida, gomez la ha llamado this.unirseAPartida = function(codigo)(esto aparecía en ./controlWeb.js)
+    this.socket;
+    this.codigo;
+    
+    this.conectar = function(){
+        this.socket=io();
+        this.servidorWS();
+    }
+    
+    this.crearPartida = function(){
+        this.socket.emit("crearPartida", rest.nick);
+    }
+    
+    this.unirseAPartida = function(codigo){
+        this.socket.emit("unirseAPartida", rest.nick, cws.codigo);
+    }
+    
+    this.abandonarPartida = function(){
+        this.socket.emit("abandonarPartidda",rest.nick,cws.codigo);
+    }
 
-    //gestionar peticiones
-        //Implementar función de escucha y gestión de los mensajes enviados por el serrvidor, gomez la ha llamado this.servidorWS = function()
+    //this.colocarBarco = function (nombre, x, y)
+    //this.barcosDesplegados = function()
+    //this.disparar = function(x,y)
+
+    this.servidorWS = function(){
+        let cli = this;
+
+        this.socket.on("partidaCreada", function(data){
+            console.log(data);
+            if(data.codigo!=-1){
+                console.log("Usuario " + rest.nick + " crea partida con codigo " + data.codigo)
+                isSecureContext.mostrarCodigo(data.codigo);
+                cli.codigo = data.codigo;
+            }
+            else{
+                console.log("No se ha podido crear partida");
+                iu.mostrarModal("No se ha podido crear la partida");
+                iu.mostrarCrearPartida();
+            }
+        });
+
+        this.socket.on("unidoAPartida", function(data){
+            if(data.codigo!=-1){
+                console.log("Usuario " + rest.nick + " se une a partida con codigo " + data.codigo);
+                iu.mostrarCodigo(data.codigo);
+                cli.codigo = data.codigo;
+            }
+            else{
+                console.log("No se ha podido unir a partida");
+            }
+        });
+
+        this.socket.on ("actualizarListaPartidas", function(lista){
+            if(!cli.codigo){
+                iu.mostrarListaDePartidasDisponibles(lista);
+            }
+        });
+
+        this.socket.on("aJugar", function(){
+            iu.mostrarModal("A jugar");
+        })
+    }
 }

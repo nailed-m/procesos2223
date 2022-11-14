@@ -1,7 +1,16 @@
 function ServidorWS(){
     //enviar peticiones
-        //Implementar una función que responda mensajes solo a la persona que envió dichos mensajes a través de un socket, gomez la ha llamado this.enviarAlRemitente = function(socket, mensaje, datos)
-        //Implementar una función que responda mensajes a todos los usuarios, sea el remitente o no, sgomez la ha llamado this.enviarATodosEnPartida = function (io, codigo, mensaje, datos)
+        this.enviarAlRemitente = function(socket, mensaje, datos){
+            socket.emit(mensaje,datos);
+        }
+
+        this.enviarATodosEnPartida=function(io,codigo,mensaje,datos){
+            io.sockets.in(codigo).emit(mensaje,datos);
+        }
+
+        this.enviarATodos=function(socket,mens,datos){
+    		socket.broadcast.emit(mens,datos);
+        }
 
     //gestionar peticiones
     this.lanzarServidorWS=function(io,juego){
@@ -10,9 +19,26 @@ function ServidorWS(){
         io.on('connection', (socket) => {
             console.log('Usuario conectado');
 
-            //Implementar qué pasa cuando recibe una petición para crear partida
+            socket.on("crearPartida",function(nick){		  	
+			  	let res = juego.jugadorCreaPartida(nick);		  	
+			  	let codigoStr=res.codigo.toString();
+			  	socket.join(codigoStr);
+	  			//cli.enviarAlRemitente(socket,"partidaCreada",res);
+	  			cli.enviarATodosEnPartida(io,codigoStr,"partidaCreada",res)
+	  			let lista=juego.obtenerPartidasDisponibles();
+	  			cli.enviarATodos(socket,"actualizarListaPartidas",lista);
+			});
+			socket.on("unirseAPartida",function(nick,codigo){
+			  	let codigoStr=codigo.toString();
+			  	socket.join(codigoStr);
+			  	let res = juego.jugadorSeUneAPartida(nick,codigo);		  	
+			  	cli.enviarAlRemitente(socket,"unidoAPartida",res);		  	
+			  	let partida=juego.obtenerPartida(codigo);
+			  	if (partida.esJugando()){
+			  		cli.enviarATodosEnPartida(io,codigoStr,"aJugar",{});
+			  	}
 
-            //Implementar qué pasa cuando recibe una petición de unirseAPartida
+			});
         });
     }
 }
