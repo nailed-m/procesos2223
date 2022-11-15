@@ -335,7 +335,7 @@ function Tablero(size){
 		}
 	}
 
-	this.casillasLibres = funtion(x,y,tam){
+	this.casillasLibres = function(x,y,tam){
 		for(i=x;i<tam;i++){
 			let contiene = this.casillas[i][y].contiene;
 			if(!contiene.esAgua()){
