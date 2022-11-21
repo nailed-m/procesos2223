@@ -39,6 +39,13 @@ function ServidorWS(){
 			  	}
 
 			});
+			socket.on("abandonarPartida",function(nick,codigo){
+				let codigoStr = codigo.toString();
+				socket.join(codigoStr);
+				juego.jugadorAbandonaPartida(nick, codigo);
+				cli.enviarAlRemitente(socket,"partidaAbandonada");
+				cli.enviarATodosEnPartida(io,codigoStr,"partidaAbandonada",{});
+			})
         });
     }
 }

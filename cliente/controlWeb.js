@@ -57,6 +57,7 @@ function ControlWeb() {
         cadena = cadena + "<h2>Hundir la flota</h2>"
         cadena = cadena + "<div><p>Bienvenido "+rest.nick+"</p></div>";
         cadena = cadena + "<div id='codigo'></div>";
+        cadena = cadena + "<div id='abandonarPartida'></div>"
         cadena = cadena + "<button id='btnSalir' class='btn btn-primary mb-2 mr-sm-2'>Salir</button>";
         cadena = cadena + "</div></div>";
 
@@ -95,6 +96,21 @@ function ControlWeb() {
     this.mostrarCodigo=function(codigo){
         let cadena = "Código de la partida: " + codigo;
         $("#codigo").append(cadena);
+    }
+
+    this.mostrarAbandonarPartida = function(){
+        $("#mAP").remove();
+
+        let cadena = "<div class='row' id='mAP'>"
+        cadena = cadena + "<div class='col'>";
+        cadena = cadena + "<button id='buttonAP' class='btn btn-primary mb-2 mr-sm-2'>Abandonar partida</button>"
+        cadena = cadena + "</div></div>"
+
+        $("#abandonarPartida").append(cadena)
+
+        $("#buttonAP").on("click",function(e){
+            cws.abandonarPartida();
+        });
     }
 
     this.mostrarListaDePartidas=function(lista){

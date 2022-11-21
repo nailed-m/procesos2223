@@ -16,7 +16,7 @@ function ClienteWS(){
     }
     
     this.abandonarPartida = function(){
-        this.socket.emit("abandonarPartidda",rest.nick,cws.codigo);
+        this.socket.emit("abandonarPartida",rest.nick,cws.codigo);
     }
 
     //this.colocarBarco = function (nombre, x, y)
@@ -30,7 +30,8 @@ function ClienteWS(){
             console.log(data);
             if(data.codigo!=-1){
                 console.log("Usuario " + rest.nick + " crea partida con codigo " + data.codigo)
-                isSecureContext.mostrarCodigo(data.codigo);
+                iu.mostrarAbandonarPartida();
+                iu.mostrarCodigo(data.codigo);
                 cli.codigo = data.codigo;
             }
             else{
@@ -59,6 +60,10 @@ function ClienteWS(){
 
         this.socket.on("aJugar", function(){
             iu.mostrarModal("A jugar");
+        })
+
+        this.socket.on("partidaAbandonada", function(){
+            iu.mostrarModal("Partida finalizada por abandono");
         })
     }
 }

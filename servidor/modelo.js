@@ -49,6 +49,14 @@ function Juego(){
     	return res;
 	}
 
+	this.jugadorAbandonaPartida = function(nick, codigo){
+		let usr = this.usuarios[nick];
+		if(usr){
+			usr.abandonarPartida(codigo);
+			res = {"codigo":0};
+		}
+	}
+
 	this.obtenerUsuario = function(nick){
 		if(this.usuarios[nick]){
 			return this.usuarios[nick];
@@ -71,6 +79,15 @@ function Juego(){
 			console.log("La partida no existe");
 		}
 		return res;
+	}
+
+	this.abandonarPartida = function(codigo,usr){
+		if (this.partidas[codigo]){
+			this.partidas[codigo].eliminarJugador(usr);
+		}
+		else {
+			console.log("La partida no existe");
+		}
 	}
 
 	this.obtenerPartidas=function(){
@@ -120,6 +137,10 @@ function Usuario(nick,juego){
 
 	this.unirseAPartida=function(codigo){
 		return this.juego.unirseAPartida(codigo,this);
+	}
+
+	this.abandonarPartida = function(codigo){
+		this.juego.abandonarPartida(codigo, this);
 	}
 
 	this.inicializarTableros = function(dim){
@@ -208,6 +229,17 @@ function Partida(codigo,usr){
 			console.log("La partida está completa")
 		}
 		return res;
+	}
+
+	this.eliminarJugador = function(usr){
+		if(usr){
+			
+			rival=this.obtenerRival(usr.nick)	
+			this.fase="final";
+			console.log("Abandona el jugador " + usr.nick + ". El ganador es " + rival.nick);
+				
+		}
+		
 	}
 
 	this.comprobarFase=function(){
