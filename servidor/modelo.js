@@ -111,7 +111,8 @@ function Usuario(nick,juego){
 	this.juego=juego;
 	this.tableroPropio;
 	this.tableroRival;
-	this.partidasthis.flota = {}; //podría ser array []
+	this.partidas;
+	this.flota = {}; //podría ser array []
 
 	this.crearPartida=function(){
 		return this.juego.crearPartida(this)
@@ -122,8 +123,8 @@ function Usuario(nick,juego){
 	}
 
 	this.inicializarTableros = function(dim){
-		this.tableroPropio = new this.tableroPropio(dim);
-		this.tableroRival = new this.tableroPropio(dim);
+		this.tableroPropio = new Tablero(dim);
+		this.tableroRival = new Tablero(dim);
 	}
 
 	this.inicializarFlota = function(){
@@ -321,7 +322,7 @@ function Tablero(size){
 		for(x=0;x<tam;x++){
 			this.casillas[x] = new Array(tam);
 			for(y=0;y<tam;y++){
-				this.casillas[x][y] = new this.Casilla(x,y);
+				this.casillas[x][y] = new Casilla(x,y);
 			}
 		}
 	}
