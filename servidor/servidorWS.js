@@ -29,7 +29,8 @@ function ServidorWS(){
 	  			cli.enviarATodos(socket,"actualizarListaPartidas",lista);
 			});
 			socket.on("unirseAPartida",function(nick,codigo){
-			  	let codigoStr=codigo.toString();
+				//console.log(codigo);
+				let codigoStr=codigo.toString();
 			  	socket.join(codigoStr);
 			  	let res = juego.jugadorSeUneAPartida(nick,codigo);		  	
 			  	cli.enviarAlRemitente(socket,"unidoAPartida",res);		  	
@@ -43,7 +44,7 @@ function ServidorWS(){
 				let codigoStr = codigo.toString();
 				socket.join(codigoStr);
 				juego.jugadorAbandonaPartida(nick, codigo);
-				cli.enviarAlRemitente(socket,"partidaAbandonada");
+				//cli.enviarAlRemitente(socket,"partidaAbandonada");
 				cli.enviarATodosEnPartida(io,codigoStr,"partidaAbandonada",{});
 			})
         });

@@ -12,7 +12,7 @@ function ClienteWS(){
     }
     
     this.unirseAPartida = function(codigo){
-        this.socket.emit("unirseAPartida", rest.nick, cws.codigo);
+        this.socket.emit("unirseAPartida", rest.nick, codigo);
     }
     
     this.abandonarPartida = function(){
@@ -44,6 +44,7 @@ function ClienteWS(){
         this.socket.on("unidoAPartida", function(data){
             if(data.codigo!=-1){
                 console.log("Usuario " + rest.nick + " se une a partida con codigo " + data.codigo);
+                iu.mostrarAbandonarPartida();
                 iu.mostrarCodigo(data.codigo);
                 cli.codigo = data.codigo;
             }
@@ -64,6 +65,7 @@ function ClienteWS(){
 
         this.socket.on("partidaAbandonada", function(){
             iu.mostrarModal("Partida finalizada por abandono");
+            iu.mostrarHome();
         })
     }
 }

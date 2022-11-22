@@ -53,7 +53,6 @@ function Juego(){
 		let usr = this.usuarios[nick];
 		if(usr){
 			usr.abandonarPartida(codigo);
-			res = {"codigo":0};
 		}
 	}
 
@@ -237,7 +236,6 @@ function Partida(codigo,usr){
 			rival=this.obtenerRival(usr.nick)	
 			this.fase="final";
 			console.log("Abandona el jugador " + usr.nick + ". El ganador es " + rival.nick);
-				
 		}
 		
 	}
