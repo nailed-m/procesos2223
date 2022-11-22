@@ -41,12 +41,37 @@ function ServidorWS(){
 
 			});
 			socket.on("abandonarPartida",function(nick,codigo){
+				let usr = juego.obtenerUsuario(nick);
+				let partida = juego.obtenerPartida(codigo)
+
 				let codigoStr = codigo.toString();
-				socket.join(codigoStr);
-				juego.jugadorAbandonaPartida(nick, codigo);
-				//cli.enviarAlRemitente(socket,"partidaAbandonada");
-				cli.enviarATodosEnPartida(io,codigoStr,"partidaAbandonada",{});
-			})
+				if(usr && partida){
+					let rival = partida.obtenerRival(jugador.nick);
+					let res = {codigoP:codigo,nombreA:jugador.nick,nombreG:rival.nick}
+					partida.abandonarPartida(usr);
+					cli.enviarATodosEnPartida(io,codigoStr,"partidaAbandonada",res);
+					socket.leave(codigoStr);
+				}
+			});
+			socket.on("colocarBarco", function(nick,nombre,x,y){
+				let jugador = juego.obtenerUsuario(nick);
+				if(jugador){
+					jugador.colocarBarco(nombre,x,y)
+					let desplegado = jugador.obtenerBarcoDesplegado(nombre)
+					let res = {barco:nombre,colocado:desplegado}
+					cli.enviarAlRemitente(socket,"barcoColocado",res);
+				}
+			});
+			socket.on("barcosDesplegados",function(nick){
+				let jugador = juego.obtenerUsuario(nick);
+				if(jugador){
+					let partida = jugador.partida;
+					jugador.disparar(x,y)
+					let codigoStr = partida.codigo.toString();
+					let res = {jugador:nick,disparoX:x,disparoY:y}
+					cli.enviarATodosEnPartida(io,codigoStr,"disparo",res);
+				}
+			});
         });
     }
 }

@@ -49,12 +49,14 @@ function Juego(){
     	return res;
 	}
 
+	/*
 	this.jugadorAbandonaPartida = function(nick, codigo){
 		let usr = this.usuarios[nick];
 		if(usr){
 			usr.abandonarPartida(codigo);
 		}
 	}
+	*/
 
 	this.obtenerUsuario = function(nick){
 		if(this.usuarios[nick]){
@@ -80,6 +82,7 @@ function Juego(){
 		return res;
 	}
 
+	/*
 	this.abandonarPartida = function(codigo,usr){
 		if (this.partidas[codigo]){
 			this.partidas[codigo].eliminarJugador(usr);
@@ -88,6 +91,7 @@ function Juego(){
 			console.log("La partida no existe");
 		}
 	}
+	*/
 
 	this.obtenerPartidas=function(){
 		let lista=[];
@@ -160,6 +164,7 @@ function Usuario(nick,juego){
 		if(this.partida.fase == "desplegando"){
 			let barco = this.flota[nombre];
 			this.tableroPropio.colocarBarco(barco,x,y);
+			return barco;
 		}
 	}
 
@@ -230,6 +235,7 @@ function Partida(codigo,usr){
 		return res;
 	}
 
+	/*
 	this.eliminarJugador = function(usr){
 		if(usr){
 			
@@ -239,6 +245,7 @@ function Partida(codigo,usr){
 		}
 		
 	}
+	*/
 
 	this.comprobarFase=function(){
 		if (!this.hayHueco()){
@@ -323,7 +330,8 @@ function Partida(codigo,usr){
 		if(this.turno.nick==atacante.nick){
 			let atacado = this.obtenerRival(nick);
 			atacado.meDisparan(x,y);
-			let estado = atacado.obtenerEstado(x,y);
+			//let estado = atacado.obtenerEstado(x,y);
+			console.log(estado);
 			atacante.marcarEstado(estado,x,y);
 			this.comprobarFin(atacado);
 		}
@@ -337,6 +345,14 @@ function Partida(codigo,usr){
 			this.fase = "final";
 			console.log("Fin de la partida");
 			console.log("Ganador: " + this.turno.nick);
+		}
+	}
+
+	this.abandonarPartida = function(jugador){
+		if(jugador){
+			rival = this.obtenerRival(jugador.nick);
+			this.fase = "final";
+			console.log("Fin de la partida");
 		}
 	}
 
@@ -377,7 +393,7 @@ function Tablero(size){
 	}
 
 	this.meDisparan = function(x,y){
-		this.casillas[x][y].contiene.meDisparan();
+		this.casillas[x][y].contiene.meDisparan(this,x,y);
 	}
 
 	this.obtenerEstado = function(x,y){
@@ -409,7 +425,7 @@ function Barco(nombre,tam){ //"b2" = barco de tamaño 2
 		return false;
 	}
 
-	this.meDisparan = function(){
+	this.meDisparan = function(tablero,x,y){
 		this.disparos++;
 		if(this.disparos<this.tam){
 			this.estado = "tocado";
@@ -433,8 +449,9 @@ function Agua(){
 		return true;
 	}
 
-	this.meDisparan = function(){
+	this.meDisparan = function(tablero,x,y){
 		console.log("agua");
+		return this.obtenerEstado();
 	}
 
 	this.obtenerEstado = function(){

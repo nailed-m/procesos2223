@@ -19,9 +19,17 @@ function ClienteWS(){
         this.socket.emit("abandonarPartida",rest.nick,cws.codigo);
     }
 
-    //this.colocarBarco = function (nombre, x, y)
-    //this.barcosDesplegados = function()
-    //this.disparar = function(x,y)
+    this.colocarBarco = function (nombre, x, y){
+        this.socket.emit("colocarBarco",rest.nick,nombre,x,y)
+    }
+    this.barcosDesplegados = function(){
+        this.socket.emit("barcosDesplegados",rest.nick)
+    }
+    this.disparar = function(x,y){
+        this.socket.emit("disparar",rest.nick,x,y)
+    }
+
+    //Gestionar peticiones
 
     this.servidorWS = function(){
         let cli = this;
@@ -59,13 +67,27 @@ function ClienteWS(){
             }
         });
 
+        this.socket.on("partidaAbandonada", function(){
+            if(data.codigo!=-1){
+                iu.mostrarHome();
+                iu.mostrarModal("Partida finalizada por abandono");
+            }
+            else{
+                console.log("No se ha podido abandonar la partida")
+                iu.mostrarModal("No se ha podido abandonar la partida")
+            }
+        });
+
         this.socket.on("aJugar", function(){
             iu.mostrarModal("A jugar");
-        })
+        });
 
-        this.socket.on("partidaAbandonada", function(){
-            iu.mostrarModal("Partida finalizada por abandono");
-            iu.mostrarHome();
-        })
+        this.socket.on("barcoColocado",function(data){
+            iu.mostrarModal(data.barco + " colocado")
+        });
+
+        this.socket.on("disparo", function(data){
+            iu.mostrarModal(data.jugaror + " dispara en " + data.disparoX + " " + data.disparoY)
+        });
     }
 }
