@@ -168,7 +168,7 @@ function Usuario(nick,juego){
 		}
 	}
 
-	this.todosDesplegador = function(){
+	this.todosDesplegados = function(){
 		for(var key in this.flota){
 			if(!this.flota[key].desplegado){
 				return false;
@@ -186,7 +186,7 @@ function Usuario(nick,juego){
 	}
 
 	this.meDisparan = function(x,y){
-		this.tableroPropio.meDisparan(x,y);
+		return this.tableroPropio.meDisparan(x,y);
 	}
 
 	this.obtenerEstado = function(x,y){
@@ -234,18 +234,6 @@ function Partida(codigo,usr){
 		}
 		return res;
 	}
-
-	/*
-	this.eliminarJugador = function(usr){
-		if(usr){
-			
-			rival=this.obtenerRival(usr.nick)	
-			this.fase="final";
-			console.log("Abandona el jugador " + usr.nick + ". El ganador es " + rival.nick);
-		}
-		
-	}
-	*/
 
 	this.comprobarFase=function(){
 		if (!this.hayHueco()){
@@ -329,7 +317,7 @@ function Partida(codigo,usr){
 
 		if(this.turno.nick==atacante.nick){
 			let atacado = this.obtenerRival(nick);
-			atacado.meDisparan(x,y);
+			let estado = atacado.meDisparan(x,y);
 			//let estado = atacado.obtenerEstado(x,y);
 			console.log(estado);
 			atacante.marcarEstado(estado,x,y);
@@ -375,7 +363,7 @@ function Tablero(size){
 
 	this.colocarBarco = function(barco,x,y){
 		if(this.casillasLibres(x,y,barco.tam)){
-			for(i=x;i<tam;i++){
+			for(i=x;i<barco.tam;i++){
 				this.casillas[i][y].contiene = barco;
 			}
 			barco.desplegado = true;
@@ -393,7 +381,7 @@ function Tablero(size){
 	}
 
 	this.meDisparan = function(x,y){
-		this.casillas[x][y].contiene.meDisparan(this,x,y);
+		return this.casillas[x][y].contiene.meDisparan(this,x,y);
 	}
 
 	this.obtenerEstado = function(x,y){
@@ -402,6 +390,10 @@ function Tablero(size){
 
 	this.marcarEstado = function(estado,x,y){
 		this.casillas[x][y].contiene = estado;
+	}
+
+	this.ponerAgua = function(x,y){
+		return this.casillas[x][y].contiene = new Agua();
 	}
 
 	this.crearTablero(size);
@@ -435,6 +427,8 @@ function Barco(nombre,tam){ //"b2" = barco de tamaño 2
 			this.estado = "hundido";
 			console.log("Hundido");
 		}
+		tablero.ponerAgua(x,y);
+		return this.estado;
 	}
 
 	this.obtenerEstado = function(){
