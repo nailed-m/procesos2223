@@ -87,7 +87,7 @@ function ClienteWS(){
         });
 
         this.socket.on("disparo", function(data){
-            iu.mostrarModal(data.jugaror + " dispara en " + data.disparoX + " " + data.disparoY)
+            iu.mostrarModal(data.jugador + " dispara en " + data.x + " " + data.y)
         });
     }
 }

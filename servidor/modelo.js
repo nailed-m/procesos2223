@@ -49,15 +49,6 @@ function Juego(){
     	return res;
 	}
 
-	/*
-	this.jugadorAbandonaPartida = function(nick, codigo){
-		let usr = this.usuarios[nick];
-		if(usr){
-			usr.abandonarPartida(codigo);
-		}
-	}
-	*/
-
 	this.obtenerUsuario = function(nick){
 		if(this.usuarios[nick]){
 			return this.usuarios[nick];
@@ -132,7 +123,7 @@ function Usuario(nick,juego){
 	this.tableroPropio;
 	this.tableroRival;
 	this.partidas;
-	this.flota = {}; //podría ser array []
+	this.flota = []; //podría ser array []
 
 	this.crearPartida=function(){
 		return this.juego.crearPartida(this)
@@ -179,6 +170,10 @@ function Usuario(nick,juego){
 
 	this.barcosDesplegados = function(){
 		this.partida.barcosDesplegados();
+	}
+
+	this.obtenerBarcoDesplegado = function(nombre){
+		return this.flota[nombre];
 	}
 
 	this.disparar = function(x,y){
@@ -267,11 +262,15 @@ function Partida(codigo,usr){
 	}
 
 	this.flotasDesplegadas = function(){
+		console.log("entro en flotas desplegadas")
 		for(i=0;i<this.jugadores.length;i++){
+			console.log(this.jugadores[i])
 			if(!this.jugadores[i].todosDesplegados()){
+				console.log("entro en el if que no debería")
 				return false;
 			}
 		}
+		console.log("flotas desplegadas");
 		return true;
 	}
 
@@ -280,6 +279,7 @@ function Partida(codigo,usr){
 			this.fase = "jugando";
 			this.asignarTurnoInicial();
 		}
+		console.log(this.fase);
 	}
 
 	this.asignarTurnoInicial = function(){
@@ -315,6 +315,8 @@ function Partida(codigo,usr){
 	this.disparar = function(nick, x, y){
 		let atacante = this.obtenerJugador(nick);
 
+		console.log(this.turno.nick);
+		console.log(atacante.nick);
 		if(this.turno.nick==atacante.nick){
 			let atacado = this.obtenerRival(nick);
 			let estado = atacado.meDisparan(x,y);
