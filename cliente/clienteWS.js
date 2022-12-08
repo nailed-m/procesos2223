@@ -26,7 +26,11 @@ function ClienteWS(){
         this.socket.emit("barcosDesplegados",rest.nick)
     }
     this.disparar = function(x,y){
+        console.log("pium?")
         this.socket.emit("disparar",rest.nick,x,y)
+    }
+    this.usuarioSale = function(nick, codigo){
+        this.socket.emit("usuarioSale",rest.nick,codigo)
     }
 
     //Gestionar peticiones
@@ -67,7 +71,7 @@ function ClienteWS(){
             }
         });
 
-        this.socket.on("partidaAbandonada", function(){
+        this.socket.on("partidaAbandonada", function(data){
             if(data.codigo!=-1){
                 iu.mostrarHome();
                 iu.mostrarModal("Partida finalizada por abandono");
@@ -78,16 +82,55 @@ function ClienteWS(){
             }
         });
 
+        this.socket.on("aDesplegar", function(data){
+            console.log(data)
+            tablero.flota = data.flota;
+            tablero.elementosGrid()
+            tablero.mostrarFlota();
+            iu.mostrarModal("Prepárate para la batalla");
+        });
+
         this.socket.on("aJugar", function(){
             iu.mostrarModal("A jugar");
         });
 
         this.socket.on("barcoColocado",function(data){
-            iu.mostrarModal(data.barco + " colocado")
+            console.log(data.barco + " colocado")
+            if (data.colocado.desplegado) {
+                let barco = tablero.flota[data.barco];
+                tablero.puedesColocarBarco(barco,data.x,data.y);
+                iu.mostrarModal("El barco: "+ data.barco + " se ha colocado");
+                cli.barcosDesplegados();
+            }
+            else {
+                iu.mostrarModal("No se puede colocar barco")
+            }
         });
 
         this.socket.on("disparo", function(data){
-            iu.mostrarModal(data.jugador + " dispara en " + data.x + " " + data.y)
+            console.log(data.atacante + " dispara en " + data.x + " " + data.y)
+            if (data.atacante==rest.nick){
+                console.log("kuxa que el atacante soy yo")
+				tablero.updateCell(data.x,data.y,data.impacto,'computer-player');
+			}
+			else{
+				tablero.updateCell(data.x,data.y,data.impacto,'human-player');	
+			}
+        });
+
+        this.socket.on("usuarioHaSalido", function(data) {
+            if(!(data.jugadorSale == rest.nick)){
+                iu.mostrarModal("El usuario " + data.jugadorSale + " ha abandonado el sistema")
+                iu.mostrarHome()
+            }
+            else {
+                iu.mostrarModal("Te has salido a mitad de partida")
+            }
+        });
+
+        this.socket.on("finalPartida", function(data) {
+            iu.mostrarHome();
+            iu.mostrarModal("Partida finalizada");
         });
     }
 }

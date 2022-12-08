@@ -43,7 +43,6 @@ function ControlWeb() {
                 $("#mAU").remove();
                 //$("#aviso").remove();
                 rest.agregarUsuario(nick);
-                //mostrar gif
             }
         })
     }
@@ -51,6 +50,7 @@ function ControlWeb() {
     this.mostrarHome = function () {
 
         $("#mH").remove();
+        $("#gc").remove();
 
         let cadena = "<div class='row' id='mH'>";
         cadena = cadena + "<div class='col'>";
@@ -69,6 +69,7 @@ function ControlWeb() {
             $("#mCP").remove();
             $("#mLP").remove();
             $("#mH").remove();
+            $("#gc").remove();
             rest.usuarioSale();
         });
     }

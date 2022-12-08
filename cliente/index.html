@@ -19,6 +19,7 @@
 	<script src="./cliente/controlWeb.js"></script>
 	<script src="./cliente/clienteWS.js"></script>
 	<script src="./cliente/tablero.js"></script>
+	<link href="./cliente/css/styles.css" rel="stylesheet" media="all"/>
 </head>
 
 <body>
@@ -36,6 +37,9 @@
 				<div id="mostrarListaDePartidas"></div>
 			</div>
 		</div>
+		<div class="row" id="tablero">
+
+		</div>	
 	</div>
 
 	<div class="modal" id="miModal">
@@ -59,7 +63,7 @@
 		rest=new ClienteRest(); //Empieza en mayúscula porque la "clase" (en JS las funciones trabajan como clases) la he nombrado empezando por mayúscula (véase ./cliente/clienteRest.js línea 1)
 		iu=new ControlWeb();
 		cws=new ClienteWS();
-		//iu.mostrarAgregarUsuario();	//Este ya no lo usamos porque desde comprobarCookie() ya lo llamará si es necesario
+		tablero = new Tablero(10);
 		iu.comprobarCookie();
 	</script>
 </body>
